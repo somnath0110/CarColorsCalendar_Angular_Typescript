@@ -1,0 +1,55 @@
+<mat-expansion-panel expanded>
+  <mat-expansion-panel-header style="background-color: silver;" [collapsedHeight]="'48px'" [expandedHeight]="'48px'">
+    <mat-panel-title>
+      <strong>{{ calendarTitle }}</strong>
+    </mat-panel-title>
+    <mat-panel-description>
+      Total Production Days in this month: &nbsp;<strong>{{ (days.length - offCount) }}</strong>
+      &nbsp;&nbsp;&nbsp;<span>Production Start Date:
+        <strong>{{ productionStartOn.format('MM-DD-YYYY') }}</strong></span>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+
+  <mat-grid-list cols="7" rowHeight="9em" gutterSize="10px">
+    <span *ngFor="let prod of days">
+      <mat-grid-tile *ngIf="prod.isProdDay && !prod.isPastday"
+        [style.border]="(isToday(prod.date) ?'3px solid':'2px dotted') + ' ' + prod.color" [style.color]="prod.color">
+        <mat-grid-tile-header [style.color]="prod.color"> {{prod.day}} - {{ prod.color | uppercase }}
+        </mat-grid-tile-header>
+        <span [style.background]="'silver'">{{ prod.date }}</span>
+      </mat-grid-tile>
+
+      <mat-grid-tile *ngIf="prod.isProdDay && prod.isPastday"
+        [style.border]="(isToday(prod.date) ?'3px':'1px') + ' solid gray'">
+        <mat-grid-tile-header> {{prod.day}} - N/A </mat-grid-tile-header>
+        <span>{{ prod.date }}</span>
+      </mat-grid-tile>
+
+      <mat-grid-tile *ngIf="prod.isHoliday" [style.border]="(isToday(prod.date) ?'3px':'1px') + ' solid pink'">
+        <mat-grid-tile-header> {{prod.day}} - Holiday </mat-grid-tile-header>
+        <span>{{ prod.date }}</span>
+      </mat-grid-tile>
+
+      <mat-grid-tile *ngIf="prod.isWeekOff" [style.border]="(isToday(prod.date) ?'3px':'1px') + ' solid gray'">
+        <mat-grid-tile-header> {{prod.day}} - Week Off </mat-grid-tile-header>
+        <span>{{ prod.date }}</span>
+      </mat-grid-tile>
+    </span>
+   </mat-grid-list>
+
+  <mat-action-row>
+    <button title="Previous Year" mat-button mat-icon-button (click)="previousYear()" *ngIf="currentYear>systemYear">
+      <mat-icon>fast_rewind</mat-icon>
+    </button>
+    <button title="Previous Month" mat-button mat-icon-button (click)="previousMonth()"
+      *ngIf="currentMonth>systemMonth || currentYear>systemYear">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button title="Next Month" mat-button mat-icon-button (click)="nextMonth()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+    <button title="Next Year" mat-button mat-icon-button (click)="nextYear()">
+      <mat-icon>fast_forward</mat-icon>
+    </button>
+  </mat-action-row>
+</mat-expansion-panel>
